@@ -1,26 +1,165 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Brand palette — mirrors svar_ai/lib/core/constants/app_colors.dart */
+  --color-primary: #2563eb;
+  --color-primary-bright: #0172ff;
+  --color-primary-deep: #014499;
+  --color-ink: #2c2c2c;
+  --color-muted: #6b7280;
+  --color-faint: #9ca3af;
+  --color-surface: #fafafa;
+  --color-card: #f8f9fa;
+  --color-hairline: #e0e0e0;
+  --color-navy: #04102b;
+  --color-navy-soft: #0a1f47;
+  --color-amber: #f59e0b;
+  --color-mint: #00c896;
+  --color-violet: #a55bff;
+
+  --font-display: var(--font-red-hat-display), ui-sans-serif, system-ui,
+    sans-serif;
+  --font-sans: var(--font-red-hat-text), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-sky-drift: sky-drift 24s ease-in-out infinite alternate;
+  --animate-cloud-slow: cloud-cross 40s linear infinite;
+  --animate-cloud-fast: cloud-cross 24s linear infinite;
+  --animate-pollen: pollen 5s ease-in-out infinite;
+  --animate-shimmer: shimmer 8s ease-in-out infinite alternate;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes sky-drift {
+    from {
+      transform: translateX(0) scale(1.14);
+    }
+    to {
+      transform: translateX(-4.5%) scale(1.24);
+    }
+  }
+
+  /* Soft cloud puffs gliding across the whole hero, looping offscreen */
+  @keyframes cloud-cross {
+    from {
+      transform: translateX(-45vw);
+    }
+    to {
+      transform: translateX(115vw);
+    }
+  }
+
+  /* Floating meadow particles (pollen / seeds) */
+  @keyframes pollen {
+    0%,
+    100% {
+      transform: translate(0, 0);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translate(14px, -22px);
+      opacity: 0.95;
+    }
+  }
+
+  /* Slow sweep of sunlight across the scene */
+  @keyframes shimmer {
+    from {
+      transform: translateX(-18%) rotate(8deg);
+      opacity: 0.25;
+    }
+    to {
+      transform: translateX(18%) rotate(8deg);
+      opacity: 0.5;
+    }
+  }
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(37, 99, 235, 0.18);
+}
+
+/* Fine film-grain overlay for large flat areas */
+.noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Soft radial brand glow */
+.glow-primary {
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    rgba(37, 99, 235, 0.12),
+    transparent 70%
+  );
+}
+
+/* Consistent keyboard focus */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Text inputs handle their own focus styling (focus-within on the pill form) */
+input[type="email"]:focus-visible,
+input[type="text"]:focus-visible {
+  outline: none;
+}
+
+/* Stop Chrome/Safari autofill from painting its pale blue box inside inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition:
+    background-color 9999999s ease-in-out 0s,
+    color 9999999s ease-in-out 0s;
+  -webkit-text-fill-color: var(--color-ink);
+  caret-color: var(--color-ink);
+}
+
+input[data-appearance="dark"]:-webkit-autofill,
+input[data-appearance="dark"]:-webkit-autofill:hover,
+input[data-appearance="dark"]:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
