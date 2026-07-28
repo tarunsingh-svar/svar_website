@@ -157,7 +157,7 @@ export function Hero() {
               }}
               className="mt-8 flex flex-col items-center gap-4 lg:items-start"
             >
-              <EmailCapture source="hero" className="w-full max-w-md" />
+              <EmailCapture source="hero" className="w-full sm:max-w-md" />
               <a
                 href="#how-it-works"
                 className="text-[14px] font-semibold text-muted transition-colors hover:text-ink"

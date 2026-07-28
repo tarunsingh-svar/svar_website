@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { Container } from "@/components/ui/Container";
@@ -10,8 +10,18 @@ import { accentSoftBg, accentText, useCases } from "@/lib/content";
 
 export function UseCases() {
   const [active, setActive] = useState(0);
+  const [userDriven, setUserDriven] = useState(false);
   const reduceMotion = useReducedMotion();
   const uc = useCases[active];
+
+  useEffect(() => {
+    if (userDriven || reduceMotion) return;
+    const id = setInterval(
+      () => setActive((a) => (a + 1) % useCases.length),
+      3000
+    );
+    return () => clearInterval(id);
+  }, [userDriven, reduceMotion]);
 
   return (
     <section id="use-cases" className="scroll-mt-16 py-24 sm:py-32">
@@ -32,7 +42,10 @@ export function UseCases() {
                 key={u.id}
                 role="tab"
                 aria-selected={i === active}
-                onClick={() => setActive(i)}
+                onClick={() => {
+                  setActive(i);
+                  setUserDriven(true);
+                }}
                 className={cn(
                   "rounded-full border px-5 py-2.5 font-display text-[14px] font-semibold transition-all",
                   i === active

@@ -113,11 +113,11 @@ export function IdeasCta() {
                 Whether it&apos;s your next meeting, your next lecture or your
                 next breakthrough idea — SVAR is ready when you are.
               </p>
-              <div className="mt-9 flex justify-center">
+              <div className="mt-9 w-full">
                 <EmailCapture
                   source="final-cta"
                   dark
-                  className="w-full max-w-md"
+                  className="mx-auto w-full sm:max-w-md"
                 />
               </div>
               <p

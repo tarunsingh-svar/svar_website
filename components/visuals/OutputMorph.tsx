@@ -22,7 +22,7 @@ export function OutputMorph() {
     if (userDriven || reduceMotion) return;
     const id = setInterval(
       () => setActive((a) => (a + 1) % outputSamples.length),
-      3800
+      3000
     );
     return () => clearInterval(id);
   }, [userDriven, reduceMotion]);

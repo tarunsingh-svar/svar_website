@@ -72,11 +72,11 @@ export function EmailCapture({
   }
 
   return (
-    <div className={className}>
+    <div className={cn("w-full min-w-0", className)}>
       <form
         onSubmit={submit}
         className={cn(
-          "flex w-full max-w-md flex-col gap-2 transition-colors sm:flex-row sm:items-center sm:rounded-full sm:border sm:p-1.5 sm:pl-5",
+          "flex w-full min-w-0 flex-col gap-3.5 transition-colors sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:border sm:p-1.5 sm:pl-5",
           dark
             ? "sm:border-white/20 sm:bg-white/10 sm:backdrop-blur sm:focus-within:border-white/50"
             : "sm:border-hairline sm:bg-white sm:shadow-[0_8px_30px_-12px_rgba(4,16,43,0.15)] sm:focus-within:border-primary/50"
@@ -103,9 +103,11 @@ export function EmailCapture({
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@work.com"
           className={cn(
-            "h-11 flex-1 rounded-full border px-5 text-[15px] outline-none transition-colors sm:h-auto sm:rounded-none sm:border-0 sm:bg-transparent sm:px-0 sm:py-2",
+            "box-border w-full min-w-0 flex-1 rounded-2xl border px-5 py-4 text-base leading-normal outline-none transition-colors",
+            "min-h-16 sm:h-auto sm:min-h-0 sm:rounded-none sm:border-0 sm:bg-transparent sm:px-0 sm:py-2 sm:text-[15px] sm:leading-normal",
+            "max-sm:shadow-[0_2px_8px_-2px_rgba(4,16,43,0.08)]",
             dark
-              ? "border-white/20 bg-white/10 text-white placeholder:text-blue-100/50 focus:border-white/50 sm:focus:border-0"
+              ? "border-white/25 bg-white/10 text-white placeholder:text-blue-100/50 focus:border-white/50 sm:focus:border-0"
               : "border-hairline bg-white text-ink placeholder:text-faint focus:border-primary/50 sm:focus:border-0"
           )}
         />
@@ -113,7 +115,8 @@ export function EmailCapture({
           type="submit"
           disabled={status === "loading"}
           className={cn(
-            "h-11 shrink-0 rounded-full px-6 font-display text-[15px] font-semibold transition-colors",
+            "box-border w-full min-h-16 shrink-0 rounded-2xl px-6 py-4 font-display text-base font-semibold leading-normal transition-colors",
+            "sm:h-11 sm:min-h-0 sm:w-auto sm:rounded-full sm:py-0 sm:text-[15px]",
             dark
               ? "bg-white text-primary-deep hover:bg-blue-50"
               : "bg-primary text-white hover:bg-primary-bright",
