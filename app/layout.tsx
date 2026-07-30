@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Red_Hat_Display, Red_Hat_Text } from "next/font/google";
+import { Toaster } from "sonner";
+import { AppProviders } from "@/components/providers/AppProviders";
 import "./globals.css";
 
 const redHatDisplay = Red_Hat_Display({
@@ -38,7 +40,15 @@ export default function RootLayout({
       lang="en"
       className={`${redHatDisplay.variable} ${redHatText.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AppProviders>{children}</AppProviders>
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            className: "font-sans text-[15px]",
+          }}
+        />
+      </body>
     </html>
   );
 }

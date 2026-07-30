@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @theme {
   /* Brand palette — mirrors svar_ai/lib/core/constants/app_colors.dart */
