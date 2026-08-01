@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireUser } from "@/lib/server/session";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { serverEnv } from "@/lib/env";
 import { maxRecordingSeconds } from "@/lib/plan";
-import { AUDIO_BUCKET } from "@/lib/queries/audio";
+import { AUDIO_BUCKET } from "@/lib/storage";
 
 const schema = z.object({
   audioPath: z.string().min(1).max(512),
@@ -45,7 +45,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const supabase = await createClient();
+  // Ownership is checked above; use the service role so signing does not
+  // depend on cookie/session quirks in Route Handlers.
+  const supabase = createAdminClient();
   const { data: signed, error: signError } = await supabase.storage
     .from(AUDIO_BUCKET)
     .createSignedUrl(audioPath, SIGNED_URL_TTL_SECONDS);

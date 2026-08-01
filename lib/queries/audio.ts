@@ -2,8 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/client";
+import { AUDIO_BUCKET } from "@/lib/storage";
 
-export const AUDIO_BUCKET = "note-audio";
+export { AUDIO_BUCKET };
 
 /** Signed URLs are short-lived; refresh a little before they expire. */
 const SIGNED_URL_TTL_SECONDS = 60 * 60;

@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { AUDIO_BUCKET } from "@/lib/storage";
 import type { TranscribeRow } from "@/lib/supabase/types";
 
 export type Note = TranscribeRow;
@@ -171,7 +172,7 @@ export function useDeleteNote() {
       // user can retry rather than leaving an orphaned file behind.
       const note = queryClient.getQueryData<Note>(notesKeys.detail(id));
       if (note?.audio_path) {
-        await supabase.storage.from("note-audio").remove([note.audio_path]);
+        await supabase.storage.from(AUDIO_BUCKET).remove([note.audio_path]);
       }
 
       const { error } = await supabase.from("transcribe").delete().eq("id", id);
