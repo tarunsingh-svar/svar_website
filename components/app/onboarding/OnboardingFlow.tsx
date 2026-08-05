@@ -26,7 +26,7 @@ export function OnboardingFlow({
   const [name, setName] = useState(suggestedName);
   const [age, setAge] = useState<string | null>(null);
   const [profession, setProfession] = useState<string | null>(null);
-  const [usage, setUsage] = useState<string | null>(null);
+  const [usage, setUsage] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
   const index = STEPS.indexOf(step);
@@ -35,7 +35,18 @@ export function OnboardingFlow({
     if (index > 0) setStep(STEPS[index - 1]);
   }
 
-  async function finish(selectedUsage: string) {
+  function toggleUsage(option: string) {
+    setUsage((current) =>
+      current.includes(option)
+        ? current.filter((item) => item !== option)
+        : [...current, option]
+    );
+  }
+
+  async function finish() {
+    if (usage.length === 0) return;
+
+    const selectedUsage = usage.join(", ");
     setSaving(true);
     const supabase = createClient();
     const {
@@ -154,23 +165,23 @@ export function OnboardingFlow({
           {step === "usage" && (
             <StepShell
               title="What do you want to use SVAR for?"
-              subtitle="We'll tune your rewrite suggestions around this."
+              subtitle="Select all that apply. We'll tune your rewrite suggestions around this."
               onBack={back}
             >
-              <OptionGrid
+              <MultiOptionGrid
                 options={USAGE_OPTIONS}
                 selected={usage}
                 disabled={saving}
-                onSelect={(value) => {
-                  setUsage(value);
-                  void finish(value);
-                }}
+                onToggle={toggleUsage}
               />
-              {saving && (
-                <p className="mt-4 text-center text-sm text-muted">
-                  Setting up your workspace…
-                </p>
-              )}
+              <Button
+                size="lg"
+                className="mt-4 w-full"
+                disabled={usage.length === 0 || saving}
+                onClick={() => void finish()}
+              >
+                {saving ? "Setting up your workspace…" : "Continue"}
+              </Button>
             </StepShell>
           )}
         </div>
@@ -229,6 +240,44 @@ function OptionGrid({
             key={option}
             disabled={disabled}
             onClick={() => onSelect(option)}
+            className={cn(
+              "flex items-center justify-between gap-2 rounded-xl border px-4 py-3.5 text-left text-[15px] font-medium transition-all",
+              "disabled:pointer-events-none disabled:opacity-60",
+              active
+                ? "border-primary bg-blue-50 text-primary-deep"
+                : "border-hairline bg-white text-ink hover:border-primary/40 hover:bg-blue-50/40"
+            )}
+          >
+            {option}
+            {active && <Check className="size-4 shrink-0" />}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function MultiOptionGrid({
+  options,
+  selected,
+  onToggle,
+  disabled = false,
+}: {
+  options: readonly string[];
+  selected: readonly string[];
+  onToggle: (value: string) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <div className="grid gap-2.5 sm:grid-cols-2">
+      {options.map((option) => {
+        const active = selected.includes(option);
+        return (
+          <button
+            key={option}
+            type="button"
+            disabled={disabled}
+            onClick={() => onToggle(option)}
             className={cn(
               "flex items-center justify-between gap-2 rounded-xl border px-4 py-3.5 text-left text-[15px] font-medium transition-all",
               "disabled:pointer-events-none disabled:opacity-60",

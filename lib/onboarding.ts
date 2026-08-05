@@ -2,6 +2,9 @@
  * Onboarding options. Values are stored verbatim in user_details, so they must
  * stay identical to the mobile screens in svar_ai/lib/modules/user_details or
  * the same person will look like two different segments.
+ *
+ * Usage selections are stored as a comma-separated string when multiple options
+ * are chosen (e.g. "Meetings & Work, Personal Notes").
  */
 
 export const AGE_OPTIONS = [
