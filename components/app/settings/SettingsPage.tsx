@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useSyncExternalStore } from "react";
 import {
   ChevronRight,
   FileText,
+  Globe,
   LifeBuoy,
   LogOut,
   Shield,
@@ -14,12 +16,18 @@ import {
 import { useSession } from "@/components/app/SessionProvider";
 import { isPro, notesRemaining, planLabel, FREE_NOTE_LIMIT } from "@/lib/plan";
 import { SUPPORT_EMAIL, PLAY_STORE_URL } from "@/lib/support";
+import { getLanguage, subscribeLanguagePreference } from "@/lib/transcription-preferences";
 import { AppPageHeader } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/Button";
 
 export function SettingsPage() {
   const { user, plan } = useSession();
   const pro = isPro(plan);
+  const languageName = useSyncExternalStore(
+    subscribeLanguagePreference,
+    () => getLanguage().name,
+    () => "Auto-detect"
+  );
 
   return (
     <>
@@ -53,6 +61,15 @@ export function SettingsPage() {
             icon={UserIcon}
             label="Your profile"
             detail={user.name || user.email}
+          />
+        </Section>
+
+        <Section title="Recording">
+          <Row
+            href="/app/settings/language"
+            icon={Globe}
+            label="Transcription language"
+            detail={languageName}
           />
         </Section>
 

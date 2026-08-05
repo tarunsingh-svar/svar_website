@@ -5,10 +5,13 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { serverEnv } from "@/lib/env";
 import { maxRecordingSeconds } from "@/lib/plan";
 import { AUDIO_BUCKET } from "@/lib/storage";
+import { localeFromAcceptLanguage } from "@/lib/transcription-preferences";
 
 const schema = z.object({
   audioPath: z.string().min(1).max(512),
   durationSeconds: z.number().int().min(0).max(24 * 60 * 60),
+  language: z.string().max(16).optional(),
+  locale: z.string().max(32).optional(),
 });
 
 /** Long enough for Flask to download the object and queue the job. */
@@ -27,7 +30,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const { audioPath, durationSeconds } = parsed.data;
+  const { audioPath, durationSeconds, language, locale } = parsed.data;
+  const deviceLocale =
+    locale ?? localeFromAcceptLanguage(request.headers.get("accept-language"));
 
   // Storage objects are namespaced by owner; refuse anything outside the
   // caller's prefix so a crafted path can't transcribe someone else's audio.
@@ -67,7 +72,11 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${auth.accessToken}`,
       },
-      body: JSON.stringify({ audio_url: signed.signedUrl }),
+      body: JSON.stringify({
+        audio_url: signed.signedUrl,
+        ...(language ? { language } : {}),
+        ...(deviceLocale ? { locale: deviceLocale } : {}),
+      }),
       signal: AbortSignal.timeout(50_000),
     });
 

@@ -1,6 +1,10 @@
 "use client";
 
 import type { TranscriptionJob } from "@/app/api/ai/transcribe/status/[jobId]/route";
+import {
+  getDeviceLocale,
+  getLanguageCode,
+} from "@/lib/transcription-preferences";
 
 const POLL_INTERVAL_MS = 2500;
 const POLL_TIMEOUT_MS = 15 * 60 * 1000;
@@ -25,7 +29,12 @@ export async function transcribeAudio({
   const start = await fetch("/api/ai/transcribe", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ audioPath, durationSeconds }),
+    body: JSON.stringify({
+      audioPath,
+      durationSeconds,
+      language: getLanguageCode(),
+      locale: getDeviceLocale(),
+    }),
   });
 
   if (!start.ok) {
