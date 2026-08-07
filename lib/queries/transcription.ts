@@ -10,7 +10,9 @@ const POLL_INTERVAL_MS = 2500;
 const POLL_TIMEOUT_MS = 15 * 60 * 1000;
 
 async function readError(response: Response, fallback: string) {
-  const payload = await response.json().catch(() => null);
+  const payload = (await response.json().catch(() => null)) as {
+    error?: string;
+  } | null;
   return payload?.error ?? fallback;
 }
 
