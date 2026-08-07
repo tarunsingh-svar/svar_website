@@ -1,7 +1,7 @@
 /**
  * Preview deploy for non-production branches (Workers Builds).
  */
-import { appendFileSync, existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,30 +29,9 @@ function readWorkerName() {
   return match?.[1] ?? "svar-website";
 }
 
-const workerName = readWorkerName();
-
-// #region agent log
-const debugEntry = {
-  sessionId: "5aaf60",
-  runId: "worker-deploy",
-  hypothesisId: "H8",
-  location: "scripts/pages-deploy-preview.mjs:deploy",
-  message: "worker preview deploy",
-  data: { workerName, branch },
-  timestamp: Date.now(),
-};
-try {
-  appendFileSync(
-    path.join(root, "..", ".cursor", "debug-5aaf60.log"),
-    `${JSON.stringify(debugEntry)}\n`
-  );
-} catch {
-  // ignore
-}
 console.log(
-  `[pages-deploy-preview] wrangler deploy (worker=${workerName}, branch=${branch})`
+  `[pages-deploy-preview] wrangler deploy (worker=${readWorkerName()}, branch=${branch})`
 );
-// #endregion
 
 const result = spawnSync("npx", ["wrangler", "deploy", "--commit-dirty=true"], {
   cwd: root,
