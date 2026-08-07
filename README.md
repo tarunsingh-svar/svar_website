@@ -85,8 +85,8 @@ Variables. Fix:
    - **User → User Details → Read**
    - **Account → Account Settings → Read**
 3. Add it as an encrypted Variable: `CLOUDFLARE_API_TOKEN`
-4. Add `CLOUDFLARE_ACCOUNT_ID` = your account ID (shown in the deploy error log,
-   e.g. `453d79f0d38d7850eed2ef3d4415bf44`)
+4. Optionally add `CLOUDFLARE_ACCOUNT_ID` as a Variable (Wrangler reads it from the
+   environment automatically — do **not** pass it as a CLI flag)
 
 **Custom domain:** add `svarai.com` and `www.svarai.com` in Cloudflare Pages,
 then point DNS to Cloudflare (see below).

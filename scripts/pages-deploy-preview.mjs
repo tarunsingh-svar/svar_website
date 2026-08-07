@@ -1,8 +1,7 @@
 /**
- * Preview / non-production Pages deploy. Cloudflare sets CF_PAGES_BRANCH
- * during builds for non-production branches.
+ * Preview / non-production Pages deploy.
  */
-import { appendFileSync } from "node:fs";
+import { appendFileSync, existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -20,18 +19,21 @@ if (!branch) {
   process.exit(1);
 }
 
+if (!existsSync(path.join(root, "out", "index.html"))) {
+  console.error(
+    "[pages-deploy-preview] Missing out/index.html — run npm run pages:build first."
+  );
+  process.exit(1);
+}
+
 // #region agent log
 const debugEntry = {
   sessionId: "5aaf60",
-  runId: "deploy-auth",
-  hypothesisId: "H5-H6",
-  location: "scripts/pages-deploy-preview.mjs:auth",
-  message: "pages preview deploy auth snapshot",
-  data: {
-    branch,
-    hasApiToken: Boolean(process.env.CLOUDFLARE_API_TOKEN),
-    hasAccountId: Boolean(process.env.CLOUDFLARE_ACCOUNT_ID),
-  },
+  runId: "deploy-fix",
+  hypothesisId: "H7",
+  location: "scripts/pages-deploy-preview.mjs:deploy",
+  message: "pages preview deploy args",
+  data: { branch, projectName, outputDir: "out" },
   timestamp: Date.now(),
 };
 try {
@@ -39,20 +41,19 @@ try {
 } catch {
   // ignore
 }
+console.log(`[pages-deploy-preview] uploading out/ to ${projectName} branch=${branch}`);
 // #endregion
 
 const args = [
   "wrangler",
   "pages",
   "deploy",
+  "out",
   "--project-name",
   projectName,
   "--branch",
   branch,
 ];
-if (process.env.CLOUDFLARE_ACCOUNT_ID) {
-  args.push("--account-id", process.env.CLOUDFLARE_ACCOUNT_ID);
-}
 
 const result = spawnSync("npx", args, {
   cwd: root,
