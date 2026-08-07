@@ -56,9 +56,19 @@ npm run pages:preview     # local preview with waitlist function
 
 | Setting | Value |
 |---|---|
-| Build command | `npm run build:marketing` |
+| Framework preset | **None** (not Next.js — that triggers `wrangler deploy`) |
+| Build command | `npm run build` |
 | Build output directory | `out` |
-| Root directory | `svar_website` (if deploying from monorepo root) |
+| **Deploy command** | **Leave empty** |
+| Root directory | *(blank — repo root is this folder)* |
+
+> **Important:** If you see `wrangler deploy` in the build logs, the **Deploy
+> command** field is set incorrectly. Clear it completely. Cloudflare Pages
+> deploys the `out/` folder automatically after the build — you must not run
+> `wrangler deploy` or `wrangler pages deploy` in the dashboard.
+
+`npm run build` auto-detects Cloudflare (`CF_PAGES=1`) and runs the marketing
+static export. On Render, the same command runs the full web-app build.
 
 **Environment variables** (Cloudflare dashboard → Settings → Environment variables)
 

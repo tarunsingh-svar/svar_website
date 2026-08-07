@@ -51,7 +51,7 @@ function restoreNonMarketingRoutes() {
 stashNonMarketingRoutes();
 
 try {
-  const result = spawnSync("npx", ["next", "build"], {
+  const result = spawnSync(process.execPath, ["node_modules/next/dist/bin/next", "build"], {
     cwd: root,
     stdio: "inherit",
     env: { ...process.env, MARKETING_BUILD: "1" },
