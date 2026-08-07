@@ -57,17 +57,14 @@ npm run pages:preview     # local preview with waitlist function
 | Setting | Value |
 |---|---|
 | Framework preset | **None** |
-| Build command | `npm run build` |
+| Build command | `npm run pages:build` |
 | **Deploy command** (production) | `npm run pages:deploy` |
 | **Non-production branch deploy command** | `npm run pages:deploy:preview` |
 | Build output directory | *(not shown — set via `wrangler.toml` → `pages_build_output_dir`)* |
 
-> **Do not use `wrangler deploy`** — that is for Workers and will fail. Both deploy
-> commands use `wrangler pages deploy`. Preview deploys pass `--branch` from
-> Cloudflare's `CF_PAGES_BRANCH` env var.
-
-`npm run build` auto-detects Cloudflare (`CF_PAGES=1`) and runs the marketing
-static export. On Render, the same command runs the full web-app build.
+> **Use `npm run pages:build` on Cloudflare** — not `npm run build`. The latter
+> runs the full web-app build (needs Supabase env vars and API routes). Marketing
+> only needs the static export in `out/`.
 
 **Environment variables** (Cloudflare dashboard → Settings → Environment variables)
 

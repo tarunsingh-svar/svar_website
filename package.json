@@ -10,6 +10,7 @@
     "build": "node scripts/build.mjs",
     "build:webapp": "next build",
     "build:marketing": "node scripts/build-marketing.mjs",
+    "pages:build": "node scripts/build-marketing.mjs",
     "pages:preview": "npm run build:marketing && wrangler pages dev out",
     "pages:deploy": "node scripts/pages-deploy.mjs",
     "pages:deploy:preview": "node scripts/pages-deploy-preview.mjs",
