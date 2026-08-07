@@ -11,6 +11,7 @@
     "build:webapp": "next build",
     "build:marketing": "node scripts/build-marketing.mjs",
     "pages:preview": "npm run build:marketing && wrangler pages dev out",
+    "pages:deploy": "wrangler pages deploy",
     "start": "next start",
     "lint": "eslint",
     "check:env": "node scripts/check-setup.mjs"

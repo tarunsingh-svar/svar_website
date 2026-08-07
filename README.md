@@ -56,16 +56,13 @@ npm run pages:preview     # local preview with waitlist function
 
 | Setting | Value |
 |---|---|
-| Framework preset | **None** (not Next.js — that triggers `wrangler deploy`) |
+| Framework preset | **None** |
 | Build command | `npm run build` |
-| Build output directory | `out` |
-| **Deploy command** | **Leave empty** |
-| Root directory | *(blank — repo root is this folder)* |
+| **Deploy command** | `npm run pages:deploy` |
+| Build output directory | *(not shown — set via `wrangler.toml` → `pages_build_output_dir`)* |
 
-> **Important:** If you see `wrangler deploy` in the build logs, the **Deploy
-> command** field is set incorrectly. Clear it completely. Cloudflare Pages
-> deploys the `out/` folder automatically after the build — you must not run
-> `wrangler deploy` or `wrangler pages deploy` in the dashboard.
+> **Do not use `wrangler deploy`** — that is for Workers and will fail. The deploy
+> command must be `wrangler pages deploy` (via `npm run pages:deploy` above).
 
 `npm run build` auto-detects Cloudflare (`CF_PAGES=1`) and runs the marketing
 static export. On Render, the same command runs the full web-app build.
