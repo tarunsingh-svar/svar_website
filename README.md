@@ -74,6 +74,20 @@ npm run pages:preview     # local preview with waitlist function
 | `NEXT_PUBLIC_SITE_URL` | e.g. `https://svarai.com` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Secret — used by Pages Function only |
 
+**Do not add `CLOUDFLARE_API_TOKEN` unless you create one on purpose.** If deploy
+fails with `Authentication error [code: 10000]`, a bad token is usually set in
+Variables. Fix:
+
+1. **Remove** `CLOUDFLARE_API_TOKEN` from Pages → Settings → Variables (try this
+   first — git builds often authenticate automatically without a custom token).
+2. If deploy still needs a token, create one at [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens):
+   - **Account → Cloudflare Pages → Edit**
+   - **User → User Details → Read**
+   - **Account → Account Settings → Read**
+3. Add it as an encrypted Variable: `CLOUDFLARE_API_TOKEN`
+4. Add `CLOUDFLARE_ACCOUNT_ID` = your account ID (shown in the deploy error log,
+   e.g. `453d79f0d38d7850eed2ef3d4415bf44`)
+
 **Custom domain:** add `svarai.com` and `www.svarai.com` in Cloudflare Pages,
 then point DNS to Cloudflare (see below).
 
