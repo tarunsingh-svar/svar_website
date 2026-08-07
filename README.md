@@ -42,54 +42,46 @@ The table schema lives in the app repo's migration history:
 
 ## Deployment
 
-### Marketing → Cloudflare Pages (free)
+### Marketing → Cloudflare Workers (free)
 
-The marketing site (`/`, `/privacy`, `/terms`) deploys as a static export. App
-routes, auth, and Next.js API routes are excluded from this build.
+The marketing site (`/`, `/privacy`, `/terms`) deploys as a static export to a
+Cloudflare **Worker** with static assets (Workers Builds git integration).
 
 ```bash
-npm run build:marketing   # emits out/
-npm run pages:preview     # local preview with waitlist function
+npm run pages:build    # emits out/
+npm run pages:preview  # local preview (waitlist API local only)
 ```
 
-**Cloudflare Pages project settings**
+**Cloudflare Workers Builds settings** (Workers & Pages → your Worker → Settings → Builds)
 
 | Setting | Value |
 |---|---|
-| Framework preset | **None** |
 | Build command | `npm run pages:build` |
 | **Deploy command** (production) | `npm run pages:deploy` |
 | **Non-production branch deploy command** | `npm run pages:deploy:preview` |
-| Build output directory | *(not shown — set via `wrangler.toml` → `pages_build_output_dir`)* |
 
-> **Use `npm run pages:build` on Cloudflare** — not `npm run build`. The latter
-> runs the full web-app build (needs Supabase env vars and API routes). Marketing
-> only needs the static export in `out/`.
+> **Use `npm run pages:build`** — not `npm run build`. The deploy uses
+> `wrangler deploy` (Workers), not `wrangler pages deploy` (Pages).
 
-**Environment variables** (Cloudflare dashboard → Settings → Environment variables)
+**Worker name must match:** the `name` in `wrangler.toml` must exactly match your
+Worker name in the Cloudflare dashboard (currently `svar_website`). If your
+Worker has a different name, update `wrangler.toml` to match.
+
+**No API token needed.** Cloudflare injects auth automatically during git builds
+(log may show `token=set` — that's the platform, not something you configure).
+
+**Optional Variables** (Settings → Variables)
 
 | Variable | Notes |
 |---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Public — baked into static build |
+| `NEXT_PUBLIC_SUPABASE_URL` | Baked into static build |
 | `NEXT_PUBLIC_SITE_URL` | e.g. `https://svarai.com` |
-| `SUPABASE_SERVICE_ROLE_KEY` | Secret — used by Pages Function only |
 
-**Do not add `CLOUDFLARE_API_TOKEN` unless you create one on purpose.** If deploy
-fails with `Authentication error [code: 10000]`, a bad token is usually set in
-Variables. Fix:
+> Waitlist (`POST /api/waitlist`) requires a follow-up for Workers static deploy
+> (move to Supabase Edge Function). The landing page itself will deploy.
 
-1. **Remove** `CLOUDFLARE_API_TOKEN` from Pages → Settings → Variables (try this
-   first — git builds often authenticate automatically without a custom token).
-2. If deploy still needs a token, create one at [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens):
-   - **Account → Cloudflare Pages → Edit**
-   - **User → User Details → Read**
-   - **Account → Account Settings → Read**
-3. Add it as an encrypted Variable: `CLOUDFLARE_API_TOKEN`
-4. Optionally add `CLOUDFLARE_ACCOUNT_ID` as a Variable (Wrangler reads it from the
-   environment automatically — do **not** pass it as a CLI flag)
-
-**Custom domain:** add `svarai.com` and `www.svarai.com` in Cloudflare Pages,
-then point DNS to Cloudflare (see below).
+**Custom domain:** Workers & Pages → your Worker → Settings → Domains → add
+`svarai.com`.
 
 **Rollback after a temporary launch:** revert `svarai.com` DNS to the previous
 registrar records. The Pages project can stay deployed at $0 while idle.
