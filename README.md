@@ -63,8 +63,7 @@ npm run pages:preview  # local preview (waitlist API local only)
 > **Use `npm run pages:build`** — not `npm run build`. The deploy uses
 > `wrangler deploy` (Workers), not `wrangler pages deploy` (Pages).
 
-**Worker name must match:** the `name` in `wrangler.toml` must exactly match your
-Worker name in the Cloudflare dashboard (currently `svar_website`). If your
+**Worker name in the Cloudflare dashboard (currently `svar-website`). If your
 Worker has a different name, update `wrangler.toml` to match.
 
 **No API token needed.** Cloudflare injects auth automatically during git builds

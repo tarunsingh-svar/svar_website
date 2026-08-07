@@ -26,7 +26,7 @@ if (!existsSync(path.join(root, "out", "index.html"))) {
 function readWorkerName() {
   const toml = readFileSync(path.join(root, "wrangler.toml"), "utf8");
   const match = toml.match(/^name\s*=\s*"([^"]+)"/m);
-  return match?.[1] ?? "svar_website";
+  return match?.[1] ?? "svar-website";
 }
 
 const workerName = readWorkerName();
