@@ -1,0 +1,5 @@
+# Copy to .dev.vars for local `npm run pages:preview`.
+# Never commit .dev.vars — it contains secrets.
+
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=

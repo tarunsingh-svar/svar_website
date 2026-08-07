@@ -60,12 +60,18 @@ export function RewriteSheet({
         body: JSON.stringify({ rewriteId: option.id, text: source }),
       });
 
-      const payload = await response.json();
+      const payload = (await response.json()) as {
+        error?: string;
+        result?: string;
+      };
       if (!response.ok) {
         throw new Error(payload.error ?? "The rewrite failed.");
       }
 
-      const result: string = payload.result;
+      const result = payload.result;
+      if (!result) {
+        throw new Error("The rewrite failed.");
+      }
       await updateNote.mutateAsync({
         id: note.id,
         patch: { summary_text: result },

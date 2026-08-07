@@ -2,9 +2,14 @@
   "name": "svar_website",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:marketing": "node scripts/build-marketing.mjs",
+    "pages:preview": "npm run build:marketing && wrangler pages dev out",
     "start": "next start",
     "lint": "eslint",
     "check:env": "node scripts/check-setup.mjs"
@@ -44,8 +49,10 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
+    "@cloudflare/workers-types": "^5.20260801.1",
     "eslint-config-next": "16.2.12",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.67.0"
   }
 }

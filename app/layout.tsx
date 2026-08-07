@@ -17,7 +17,9 @@ const redHatText = Red_Hat_Text({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://svar.ai"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://svarai.com"
+  ),
   title: "SVAR AI — Speak Once. Use It Everywhere.",
   description:
     "Turn meetings, conversations, lectures and ideas into transcripts, summaries, action items and ready-to-share content — in seconds.",
