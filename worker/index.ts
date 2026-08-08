@@ -34,18 +34,6 @@ function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length <= 254;
 }
 
-function jwtRole(key: string): string | null {
-  try {
-    const payload = key.split(".")[1];
-    if (!payload) return null;
-    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const decoded = JSON.parse(atob(normalized)) as { role?: string };
-    return decoded.role ?? null;
-  } catch {
-    return null;
-  }
-}
-
 async function handleWaitlist(request: Request, env: Env): Promise<Response> {
   const ip = clientIp(request);
   if (rateLimited(ip)) {
@@ -72,29 +60,7 @@ async function handleWaitlist(request: Request, env: Env): Promise<Response> {
   const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) {
     console.error("Waitlist: missing Supabase env vars");
-    // #region agent log
-    return json(
-      {
-        error: "Something went wrong. Please try again.",
-        _debug: { hasUrl: !!url, hasKey: !!serviceKey, reason: "missing_env" },
-      },
-      500
-    );
-    // #endregion
-  }
-
-  const keyRole = jwtRole(serviceKey);
-  if (keyRole && keyRole !== "service_role") {
-    console.error("Waitlist: SUPABASE_SERVICE_ROLE_KEY has wrong role:", keyRole);
-    // #region agent log
-    return json(
-      {
-        error: "Something went wrong. Please try again.",
-        _debug: { hasUrl: true, hasKey: true, keyRole, reason: "wrong_key_role" },
-      },
-      500
-    );
-    // #endregion
+    return json({ error: "Something went wrong. Please try again." }, 500);
   }
 
   const response = await fetch(`${url}/rest/v1/waitlist`, {
@@ -119,22 +85,7 @@ async function handleWaitlist(request: Request, env: Env): Promise<Response> {
       return json({ ok: true });
     }
     console.error("Waitlist insert failed:", response.status, detail.slice(0, 300));
-    // #region agent log
-    return json(
-      {
-        error: "Something went wrong. Please try again.",
-        _debug: {
-          hasUrl: true,
-          hasKey: true,
-          keyRole: keyRole ?? "unknown",
-          supabaseStatus: response.status,
-          supabaseCode: detail.includes("42501") ? "rls_violation" : "insert_failed",
-          reason: "supabase_error",
-        },
-      },
-      500
-    );
-    // #endregion
+    return json({ error: "Something went wrong. Please try again." }, 500);
   }
 
   return json({ ok: true });

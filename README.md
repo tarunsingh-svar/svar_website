@@ -69,16 +69,15 @@ Worker has a different name, update `wrangler.toml` to match.
 **No API token needed.** Cloudflare injects auth automatically during git builds
 (log may show `token=set` — that's the platform, not something you configure).
 
-**Optional Variables** (Settings → Variables → **Production** runtime)
+**Worker runtime secrets** (Settings → **Variables and Secrets** on the `svar-website` Worker — **not** the Builds tab)
 
 | Variable | Type | Notes |
 |---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Plain text | e.g. `https://tjhuexhsadigbqbxnxkd.supabase.co` |
-| `SUPABASE_SERVICE_ROLE_KEY` | **Secret** | Required for waitlist signups |
+| `SUPABASE_SERVICE_ROLE_KEY` | **Secret** | **Required.** Must be the **service role** key (`role: service_role` in JWT), not the anon key. |
 
-Also add both under **Build** variables if not already set (for static HTML metadata).
+`NEXT_PUBLIC_SUPABASE_URL` is pinned in `wrangler.toml` so the Worker always has it at runtime.
 
-> Waitlist (`POST /api/waitlist`) is handled by `worker/index.ts` on deploy.
+> **Common mistake:** Variables under **Workers Builds → Settings → Build variables** are only available during the build step. The waitlist API runs in the Worker at request time and needs `SUPABASE_SERVICE_ROLE_KEY` under the Worker's own **Variables and Secrets** page (Production environment).
 
 **Custom domain:** Workers & Pages → your Worker → Settings → Domains → add
 `svarai.com`.
