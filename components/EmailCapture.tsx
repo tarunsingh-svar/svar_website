@@ -34,6 +34,9 @@ export function EmailCapture({
           company: (form.get("company") as string) ?? "",
         }),
       });
+      // #region agent log
+      fetch('http://127.0.0.1:7869/ingest/5bb2bbb2-3f4c-45b3-8d61-cfcc30071a75',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'5aaf60'},body:JSON.stringify({sessionId:'5aaf60',location:'EmailCapture.tsx:37',message:'waitlist response',data:{status:res.status,ok:res.ok,url:res.url},timestamp:Date.now(),hypothesisId:'A',runId:'pre-fix'})}).catch(()=>{});
+      // #endregion
       const data = (await res.json()) as { ok?: boolean; error?: string };
       if (res.ok && data.ok) {
         setStatus("success");
@@ -41,7 +44,10 @@ export function EmailCapture({
         setStatus("error");
         setMessage(data.error ?? "Something went wrong. Please try again.");
       }
-    } catch {
+    } catch (err) {
+      // #region agent log
+      fetch('http://127.0.0.1:7869/ingest/5bb2bbb2-3f4c-45b3-8d61-cfcc30071a75',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'5aaf60'},body:JSON.stringify({sessionId:'5aaf60',location:'EmailCapture.tsx:48',message:'waitlist fetch failed',data:{error:err instanceof Error?err.message:String(err)},timestamp:Date.now(),hypothesisId:'C',runId:'pre-fix'})}).catch(()=>{});
+      // #endregion
       setStatus("error");
       setMessage("Network error. Please try again.");
     }

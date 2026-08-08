@@ -69,15 +69,16 @@ Worker has a different name, update `wrangler.toml` to match.
 **No API token needed.** Cloudflare injects auth automatically during git builds
 (log may show `token=set` — that's the platform, not something you configure).
 
-**Optional Variables** (Settings → Variables)
+**Optional Variables** (Settings → Variables → **Production** runtime)
 
-| Variable | Notes |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Baked into static build |
-| `NEXT_PUBLIC_SITE_URL` | e.g. `https://svarai.com` |
+| Variable | Type | Notes |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Plain text | e.g. `https://tjhuexhsadigbqbxnxkd.supabase.co` |
+| `SUPABASE_SERVICE_ROLE_KEY` | **Secret** | Required for waitlist signups |
 
-> Waitlist (`POST /api/waitlist`) requires a follow-up for Workers static deploy
-> (move to Supabase Edge Function). The landing page itself will deploy.
+Also add both under **Build** variables if not already set (for static HTML metadata).
+
+> Waitlist (`POST /api/waitlist`) is handled by `worker/index.ts` on deploy.
 
 **Custom domain:** Workers & Pages → your Worker → Settings → Domains → add
 `svarai.com`.
@@ -116,7 +117,8 @@ A     @    3.33.130.190
 - `app/(marketing)/` — landing, privacy, terms
 - `app/app/` — authenticated web app (Render only)
 - `app/api/waitlist/` — waitlist route for local dev / Render
-- `functions/api/waitlist.ts` — waitlist for Cloudflare Pages
+- `functions/api/waitlist.ts` — waitlist for local Pages preview (legacy)
+- `worker/index.ts` — waitlist API on Cloudflare Workers deploy
 - `scripts/build-marketing.mjs` — static export build for Pages
 - `components/sections/` — one component per landing page section
 - `components/visuals/` — coded product visuals
