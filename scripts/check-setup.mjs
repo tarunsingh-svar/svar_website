@@ -59,9 +59,15 @@ for (const key of optional) {
 if (ok) {
   console.log("Env looks good. Start the app with: npm run dev");
   console.log("");
+  console.log("Supabase Auth checklist (Dashboard):");
+  console.log("  Email provider: ON");
+  console.log('  "Confirm email": OFF (password sign-up logs in immediately)');
+  console.log("  Google provider: ON (for Continue with Google)");
+  console.log("");
   console.log("Supabase redirect URLs (Dashboard > Auth > URL Configuration):");
   console.log(`  Site URL: ${env.NEXT_PUBLIC_SITE_URL}`);
   console.log(`  Redirect: ${env.NEXT_PUBLIC_SITE_URL}/auth/callback`);
+  console.log("  Mobile:   com.svar.ai://login-callback/");
   process.exit(0);
 }
 

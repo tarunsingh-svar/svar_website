@@ -12,7 +12,7 @@ export const privacyPolicy: LegalSection[] = [
   },
   {
     title: "Information we collect",
-    body: "Account information: When you sign in with Google, we receive your email address and basic profile details needed to create and secure your account.\n\nContent you create: We store the notes, transcripts, summaries, tags, and related metadata you save in the app, including audio recordings you choose to upload or process.\n\nUsage and device information: We may collect app usage events, crash logs, and device or operating system details to keep the service reliable and secure.\n\nSubscription information: If you purchase SVAR AI Pro, payment and entitlement details are processed by Apple, Google, and RevenueCat. We do not receive your full payment card number.",
+    body: "Account information: When you sign in with Google or with an email and password, we collect the email address and basic profile details needed to create and secure your account.\n\nContent you create: We store the notes, transcripts, summaries, tags, and related metadata you save in the app, including audio recordings you choose to upload or process.\n\nUsage and device information: We may collect app usage events, crash logs, and device or operating system details to keep the service reliable and secure.\n\nSubscription information: If you purchase SVAR AI Pro, payment and entitlement details are processed by Apple, Google, and RevenueCat. We do not receive your full payment card number.",
   },
   {
     title: "How we use information",
