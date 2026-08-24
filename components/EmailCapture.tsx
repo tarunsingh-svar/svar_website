@@ -123,7 +123,7 @@ export function EmailCapture({
             status === "loading" && "opacity-70"
           )}
         >
-          {status === "loading" ? "Joining…" : "Get Early Access"}
+          {status === "loading" ? "Joining…" : "Join Waitlist"}
         </button>
       </form>
       {status === "error" && (

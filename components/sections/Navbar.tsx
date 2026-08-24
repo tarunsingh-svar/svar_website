@@ -47,7 +47,7 @@ export function Navbar() {
           ))}
         </div>
         <Button href="#early-access" size="sm">
-          Get Early Access
+          Join Waitlist
         </Button>
       </nav>
     </header>
