@@ -2,13 +2,17 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 
-const columns = [
+type FooterLink =
+  | { label: string; href: string }
+  | { label: string; comingSoon: true };
+
+const columns: { title: string; links: FooterLink[] }[] = [
   {
     title: "Product",
     links: [
       { label: "Features", href: "#features" },
       { label: "Use Cases", href: "#use-cases" },
-      { label: "Download", href: "#download" },
+      { label: "Download", href: "#early-access" },
     ],
   },
   {
@@ -22,9 +26,9 @@ const columns = [
     title: "Contact",
     links: [
       { label: "hello@svar.ai", href: "mailto:hello@svar.ai" },
-      { label: "LinkedIn", href: "https://www.linkedin.com/company/svar-ai" },
-      { label: "X", href: "https://x.com/svar_ai" },
-      { label: "Instagram", href: "https://www.instagram.com/svar.ai" },
+      { label: "LinkedIn", comingSoon: true },
+      { label: "X", href: "https://x.com/kuchtohboltarun" },
+      { label: "Instagram", comingSoon: true },
     ],
   },
 ];
@@ -51,11 +55,30 @@ export function Footer() {
               <ul className="space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    {link.href.startsWith("http") ? (
+                    {"comingSoon" in link ? (
+                      <span className="text-[14px] text-muted">
+                        {link.label}{" "}
+                        <span className="text-faint">(coming soon)</span>
+                      </span>
+                    ) : link.href.startsWith("http") ? (
                       <a
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="text-[14px] text-muted transition-colors hover:text-ink"
+                      >
+                        {link.label}
+                      </a>
+                    ) : link.href.startsWith("mailto:") ? (
+                      <a
+                        href={link.href}
+                        className="text-[14px] text-muted transition-colors hover:text-ink"
+                      >
+                        {link.label}
+                      </a>
+                    ) : link.href.startsWith("#") ? (
+                      <a
+                        href={link.href}
                         className="text-[14px] text-muted transition-colors hover:text-ink"
                       >
                         {link.label}

@@ -63,6 +63,14 @@ export function Button({
   );
 
   if (href) {
+    if (href.startsWith("#")) {
+      return (
+        <a href={href} className={cls}>
+          {children}
+        </a>
+      );
+    }
+
     return (
       <Link href={href} className={cls}>
         {children}
